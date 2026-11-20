@@ -4,6 +4,7 @@ Küfür, hakaret, reklam ve davet linki filtresi, otomatik timeout ve loglama
 """
 
 import re
+import base64
 import datetime
 import logging
 from typing import Optional
@@ -20,12 +21,17 @@ DISCORD_INVITE_PATTERN = re.compile(
     re.IGNORECASE
 )
 
-# Temel Küfür ve Yasaklı Kelime Listesi (Normalizasyon ile eşleşir)
-PROFANITY_ROOTS = [
-    "oç", "orospu", "pic", "piç", "sik", "sikik", "sikerim", "yarrak", "amk", "aq",
-    "amq", "got", "göt", "gavat", "ibne", "kahpe", "pezevenk", "sürtük", "yarram",
-    "fuck", "bitch", "asshole", "dick", "pussy", "bastard", "cunt", "motherfucker"
+# Yayıncı ve Canlı Yayın Standartları:
+# Uygunsuz kelime kökleri, kod incelemelerinde veya canlı yayınlarda izleyicilerin
+# rahatsız olmaması ve yayın platform kuralları gereği güvenli base64 formatında saklanır.
+_ENCODED_PROFANITY_ROOTS = [
+    "b8On", "b3Jvc3B1", "cGlj", "cGnDpw==", "c2lr", "c2lraWs=", "c2lrZXJpbQ==",
+    "eWFycmFr", "YW1r", "YXE=", "YW1x", "Z290", "Z8O2dA==", "Z2F2YXQ=",
+    "aWJuZQ==", "a2FocGU=", "cGV6ZXZlbms=", "c8O8cnTDvGs=", "eWFycmFt",
+    "ZnVjaw==", "Yml0Y2g=", "YXNzaG9sZQ==", "ZGljaw==", "cHVzc3k=",
+    "YmFzdGFyZA==", "Y3VudA==", "bW90aGVyZnVja2Vy"
 ]
+PROFANITY_ROOTS = [base64.b64decode(item).decode("utf-8") for item in _ENCODED_PROFANITY_ROOTS]
 
 def normalize_text(text: str) -> str:
     """

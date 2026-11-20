@@ -178,10 +178,13 @@ class TestModerationFilters(unittest.TestCase):
         self.assertFalse(bool(DISCORD_INVITE_PATTERN.search("https://google.com")))
 
     def test_profanity_filter(self):
-        self.assertTrue(contains_profanity("bu bir amk testi"))
-        self.assertTrue(contains_profanity("orospu"))
-        self.assertTrue(contains_profanity("siiiik"))
+        # Yayıncı ve izleyici dostu test: Açık küfür yazmadan filtrenin doğruluğunu test eder
+        import base64
+        sample_word = base64.b64decode("YW1r").decode("utf-8")
+        self.assertTrue(contains_profanity(f"test {sample_word} mesaji"))
+        self.assertTrue(contains_profanity("s" + "i" * 4 + "k"))
         self.assertFalse(contains_profanity("Merhaba nasılsınız arkadaşlar"))
+        self.assertFalse(contains_profanity("Harika bir topluluk sunucusu"))
 
 
 class TestDatabase(unittest.TestCase):
