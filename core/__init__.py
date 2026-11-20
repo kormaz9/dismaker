@@ -1,0 +1,3 @@
+"""
+DisMaker Çekirdek Modülü (Core)
+"""
